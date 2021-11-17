@@ -3,7 +3,6 @@ import avatar_icon from '../../assets/icons/user-avatar.svg'
 
 const Dialog = () => {
     return <section className="dialog_section">
-            <div className="companion_container">
                 <div className="message">
                     <div className="avatar">
                         <img src={avatar_icon} alt="avatar_companion" />
@@ -36,10 +35,8 @@ const Dialog = () => {
                         </div>
                     </div>
                 </div>
-            </div>
             
-            <div className="me_container">
-                <div className="message"> 
+                <div className="me_message"> 
                     <div className="dialog_container">
                         <div className="message_body message_body_me">
                             <span>Hi First name, I need some time for creating study peport.<br/>3 hours for everything</span>
@@ -51,7 +48,6 @@ const Dialog = () => {
                         </div>
                     </div>
                 </div>
-            </div>
 
             <div className="companion_container">
                 <div className="message">

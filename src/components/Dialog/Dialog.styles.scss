@@ -1,82 +1,75 @@
 .dialog_section {
     padding: 35px 20px;
 
-    .companion_container, .me_container {
-        flex-direction: column;
-        .message {
-            display: flex;
-            align-items: flex-end;
+    .message, .me_message {
+        display: flex;
+        align-items: flex-end;
+        height: fit-content;
+        margin: 0px;
+        margin-bottom: 9px;
+        .dialog_container {
+            flex-direction: column;
+            text-align: left;
+            padding-top: 10px;
+            padding-left: 16px;
+            padding-right: 8px;
+            padding-bottom: .5em;
+            line-height: 24px;
+            width: 469px;
             height: fit-content;
-            margin: 0px;
-            margin-bottom: 9px;
-            .dialog_container {
-                flex-direction: column;
-                text-align: left;
-                padding-top: 10px;
-                padding-left: 16px;
-                padding-right: 8px;
-                padding-bottom: .5em;
-                line-height: 24px;
-                width: 469px;
-                height: fit-content;
-                background-color:#464646;
-                border-radius: 9px;
-                .message_body {
-                    width: 425px;
-                    position: relative;
-                    &_me {
-                        font-weight: 500;
-                    }
-                    span {
-                        font-size: 20px;
-                        font-weight: 400;
-                        color: #ECECEC;
-                    }
-                    h5 {
-                        margin-top: 0px;
-                        margin-bottom: .2em;
-                        font-size: 20px;
-                    }
-                    .time_container {
-                        float: right;
-                        transform: translateX(40px);
-                        span {
-                            color: #14FF72;
-                        }
-                    }
+            background-color:#464646;
+            border-radius: 9px;
+            .message_body {
+                width: 425px;
+                position: relative;
+                &_me {
+                    font-weight: 500;
                 }
-            }
-            .avatar {
-                width: 60px;
-                height: 59px;
-                border-radius: 52px;
-                margin-right: 17px;
-                img {
-                    width: 100%;
-                    height: 100%;
+                span {
+                    font-size: 20px;
+                    font-weight: 400;
+                    color: #ECECEC;
+                }
+                h5 {
+                    margin-top: 0px;
+                    margin-bottom: .2em;
+                    font-size: 20px;
+                }
+                .time_container {
+                    float: right;
+                    transform: translateX(40px);
+                    span {
+                        color: #14FF72;
+                    }
                 }
             }
         }
+        .avatar {
+            width: 60px;
+            height: 59px;
+            border-radius: 52px;
+            margin-right: 17px;
+            img {
+                width: 100%;
+                height: 100%;
+            }
+        }
     }
-
-    .me_container {
-        width: 100%;
-        .message {
-            display: flex;
-            justify-content: end;
-            .dialog_container {
-                padding: 7px 8px 7px 16px !important;
-                background-color: rgba(20, 255, 114, 0.7) !important;
-                .time_container {
-                    top: 20px !important;
-                    span {
-                        color: #DFDFDF !important;
-                    }
-                }
+    .me_message {
+        justify-content: end;
+        .dialog_container {
+            padding: 7px 8px 7px 16px !important;
+            background-color: rgba(20, 255, 114, 0.7) !important;
+            border-radius: 9px;
+            .time_container {
+                top: 20px !important;
                 span {
-                    font-weight: 500;
-                    color: white !important;
+                    color: #DFDFDF !important;
                 }
+            }
+            span {
+                font-weight: 500 !important;
+                color: white !important;
             }
         }
     }
