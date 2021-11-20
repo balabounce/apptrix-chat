@@ -4,17 +4,29 @@ const app = express();
 const server = require('http').Server(app);
 const io = require('socket.io')(server);
 
+app.use(express.json());
 
-const mainRoom = new Map([
+const rooms = new Map();
 
-]);
-
-app.get('/', (req, res) => {
-    res.json(mainRoom);
+app.get('/rooms', (req, res) => {
+    res.json(rooms);
 });
 
+app.post('/rooms', (req, res) => {
+    const { roomId, userName } = req.body;
+    if(!rooms.has(roomId)) {
+        rooms.set(roomId, 
+            new Map([
+                ['users', new Map()],
+                ['messages', []]
+        ]));
+    }
+    res.send();
+});
+
+
 io.on('connection', socket => {
-    console.log('socket connected', socket.id);
+    console.log('user connected', socket.id);
 });
 
 server.listen(9999, (error) => {
