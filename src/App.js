@@ -1,4 +1,5 @@
 import React from 'react';
+import socket from './server/socket';
 import reducer from './store/reducer';
 import './App.css';
 import { Header } from './components';
@@ -8,21 +9,28 @@ import { JoinForm } from './components';
 
 function App() {
     const [state, dispatch] = React.useReducer(reducer, {
-        isAuth: false
+        joined: false,
+        roomId: null,
+        userName: null
     });
-
-    const onLogin = () => {
+    const onLogin = (obj) => {
         dispatch({
-            type: 'IS_AUTH',
-            payload: true
-        })
+            type: 'JOINED',
+            payload: obj,
+        });
+        socket.emit('ROOM:JOIN', obj);
     };
+
+    socket.on('ROOM:JOINED', users => {
+        console.log('users come', users);
+    })
+
     return (
         <div className="App">
         {/*<Header/>
           //<Dialog/>
           <InputForm/>*/}
-        { !state.isAuth && <JoinForm onLogin={onLogin} />}
+        { !state.joined && <JoinForm onLogin={onLogin} /> }
         </div>
       );
 }

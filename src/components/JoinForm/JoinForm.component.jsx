@@ -1,6 +1,5 @@
 import React from "react";
 import axios from "axios";
-import socket from '../../server/socket';
 import './JoinForm.styles.scss';
 
 const JoinForm = ({ onLogin }) => {
@@ -12,11 +11,13 @@ const JoinForm = ({ onLogin }) => {
         if(!roomId || !userName) {
             return alert('Please try again!');
         };
-        setIsLoading(true);
-        await axios.post('/rooms', {
+        const obj = {
             roomId,
             userName
-        }).then(onLogin);
+        };
+        setIsLoading(true);
+        await axios.post('/rooms', obj);
+        onLogin(obj);
     };
 
     return (
@@ -39,10 +40,11 @@ const JoinForm = ({ onLogin }) => {
             value={roomId}
             onChange={(event) => setRoomId(event.target.value)}
             required/>
-            <input 
+            <input
+            disabled={isLoading}
             type='submit' 
             id='form_submit' 
-            value='Inside'
+            value={isLoading ? 'Loading' : 'Inside'}
             onClick={onEnter}
             />
         </div>
