@@ -1,7 +1,8 @@
 import './Dialog.styles.scss';
 import avatar_icon from '../../assets/icons/user-avatar.svg'
 
-const Dialog = () => {
+const Dialog = ({users, messages, userName, roomId}) => {
+    console.log(users, messages, userName, roomId);
     return <section className="dialog_section">
                 <div className="message">
                     <div className="avatar">

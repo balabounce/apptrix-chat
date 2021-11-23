@@ -5,12 +5,19 @@ import { useState } from 'react';
 import { createSocket } from '../../server/createSocket';
 const InputForm = () => {
     const [inputStatus, setInputStatus] = useState(false);
+    const [messageValue, setMessageValue] = useState('');
 
     return <section className="input">
             <div  className="input_container">
                 <form name='publish'>
-                    <textarea className='textarea_input' name='message' type="text" placeholder='Enter text message' onChange={(event) => {
+                    <textarea className='textarea_input' 
+                    name='message' 
+                    type="text" 
+                    value={messageValue}
+                    placeholder='Enter text message' 
+                    onChange={(event) => {
                         const texArea = document.querySelector(`.${event.target.classList}`);
+                        setMessageValue(event.target.value);
                         texArea.style.cssText = 'height:auto; padding:0';
                         texArea.style.cssText = 'height:' + texArea.scrollHeight + 'px';
                         texArea.value.length > 0 ? setInputStatus(true) : setInputStatus(false);
