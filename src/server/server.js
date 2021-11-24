@@ -1,72 +1,35 @@
 const express = require('express');
-
 const app = express();
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
+const http = require('http');
+const cors = require('cors');
+const { Server } = require('socket.io');
 
-app.use(express.json());
+app.use(cors());
 
-const rooms = new Map();
-
-app.get('/rooms/:id', (req, res) => {
-    const { id: roomId } = req.params.id;
-    const obj = rooms.has(roomId) 
-        ? {
-            users: [...rooms.get(roomId).get('users').values()],
-            messages: [...rooms.get(roomId).get('users').values()],
-        } 
-        : {
-            users: [], messages: []
-        };
-    res.json(obj);
+const server = http.createServer(app);
+const io = new Server(server, {
+    cors: {
+        origin: 'http://localhost:3000',
+        methods: ['GET', 'POST'],
+    }
 });
-
-app.post('/rooms', (req, res) => {
-    const { roomId, userName } = req.body;
-    if (!rooms.has(roomId)) {
-        rooms.set(
-            roomId,
-            new Map([
-                ['users', new Map()],
-                ['messages', []],
-            ])
-        );
-    };
-    res.send();
-});
-
 
 io.on('connection', (socket) => {
-    socket.on('ROOM:JOIN', ({roomId, userName}) => {
-        socket.join(roomId);
-        rooms.get(roomId).get('users').set(socket.id, userName);
-        const users = [...rooms.get(roomId).get('users').values()];
-        socket.broadcast.to(roomId).emit('ROOM:SET_USERS', users);
-        //socket.emit();
-    });
+    console.log('User connected', socket.id); 
     
-    socket.on('ROOM:NEW_MESSAGE', ({roomId, userName, text}) => {
-        const obj = {
-            userName,
-            text,
-        };
-        rooms.get(roomId).push(obj);
-        socket.broadcast.to(roomId).emit('ROOM:NEW_MESSAGE', obj);
+    socket.on('JOIN_ROOM', data => {
+        socket.join(data);
+        console.log(`User with ID: ${socket.id} joined room: ${data}`);
     });
-    socket.on('disconnected', () => {
-        rooms.forEach((value, roomId) => {
-            if (value.get('users').delete(socket.id)) {
-                const users = [...rooms.get(roomId).get('users').values()];
-                socket.broadcast.to(roomId).emit('ROOM:LEAVE', users);
-
-            }
-        });
+    socket.on('SEND_MESSAGE', data => {
+        socket.to(data.roomId).emit('RECEIVE_MESSAGE' ,data);
     });
-
-    console.log('user connected', socket.id);
+    socket.on('disconnect', () => {
+        console.log('User disconnected', socket.id);
+    });
 });
 
-server.listen(9999, (error) => {
-    if(error) throw Error(error);
-    console.log('server begin')
+
+server.listen(9999, () => {
+    console.log('SERVER RUNNING');
 });

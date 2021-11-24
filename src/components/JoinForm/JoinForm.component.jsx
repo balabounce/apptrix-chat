@@ -1,23 +1,16 @@
 import React from "react";
 import axios from "axios";
+import socket from '../../server/socket';
 import './JoinForm.styles.scss';
 
-const JoinForm = ({ onLogin }) => {
-    const [roomId, setRoomId] = React.useState('');
-    const [userName, setUserName] = React.useState('');
-    const [isLoading, setIsLoading] = React.useState(false);
+const JoinForm = ({ userName, roomId, setUserName, setRoomId, setAuth }) => {
 
     const onEnter = async () => {
-        if(!roomId || !userName) {
-            return alert('Please try again!');
+        if (!!userName && !!roomId) {
+            console.log('*')
+            socket.emit('JOIN_ROOM', roomId);
+            setAuth(true);
         };
-        const obj = {
-            roomId,
-            userName
-        };
-        setIsLoading(true);
-        await axios.post('/rooms', obj);
-        onLogin(obj);
     };
 
     return (
@@ -41,10 +34,9 @@ const JoinForm = ({ onLogin }) => {
             onChange={(event) => setRoomId(event.target.value)}
             required/>
             <input
-            disabled={isLoading}
             type='submit' 
             id='form_submit' 
-            value={isLoading ? 'Loading' : 'Inside'}
+            value={'Inside'}
             onClick={onEnter}
             />
         </div>

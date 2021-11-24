@@ -1,8 +1,7 @@
 import './Dialog.styles.scss';
 import avatar_icon from '../../assets/icons/user-avatar.svg'
 
-const Dialog = ({users, messages, userName, roomId}) => {
-    console.log(users, messages, userName, roomId);
+const Dialog = ({messageList, userName}) => {
     return <section className="dialog_section">
                 <div className="message">
                     <div className="avatar">
@@ -50,7 +49,6 @@ const Dialog = ({users, messages, userName, roomId}) => {
                     </div>
                 </div>
 
-            <div className="companion_container">
                 <div className="message">
                     <div className="avatar">
                         <img src={avatar_icon} alt="avatar_companion" />
@@ -67,7 +65,40 @@ const Dialog = ({users, messages, userName, roomId}) => {
                         </div>
                     </div>
                 </div>
-            </div>
+                {messageList.map((messageContent, index) => {
+                    console.log(userName, messageContent.userName);
+                    if(userName !== messageContent.author) {
+                        return <div className="message" key={`${messageContent.userName} + ${index}`}>
+                            <div className="avatar">
+                                <img src={avatar_icon} alt="avatar_companion" />
+                            </div>
+                            <div className="dialog_container">
+                                <div className="message_body message_body_companion">
+                                    <h5>{messageContent.author}</h5>
+                                    <span>{messageContent.message}</span>
+                                    <div className="time_container">
+                                        <span>
+                                            {messageContent.time}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    } else {
+                        return <div className="me_message" key={'me_message' + index}> 
+                            <div className="dialog_container">
+                                <div className="message_body message_body_me">
+                                    <span>{messageContent.message}</span>
+                                    <div className="time_container">
+                                        <span>
+                                            {messageContent.time}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        }
+                })}
         </section>
 }
 
