@@ -1,31 +1,18 @@
-import React, {useState} from 'react';
-import io from 'socket.io-client';
-import axios from 'axios';
-import socket from './server/socket';
-import reducer from './store/reducer';
+import React from 'react';
+import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import './App.css';
 import { JoinForm } from './components'; 
-import { Chat } from './components';
+import { Chat } from './pages';
 
 function App() {
-    const [userName, setUserName] = useState('');
-    const [roomId, setRoomId] = useState('');
-    const [isAuth, setAuth] = useState(false);
-    console.log(isAuth);
-    
     return (
         <div className="App">
-        {(!isAuth) ?
-            <JoinForm 
-            userName={userName} 
-            roomId={roomId} 
-            setUserName={setUserName} 
-            setRoomId={setRoomId}
-            setAuth={setAuth}
-            />
-            :
-             <Chat userName={userName} roomId={roomId}/>
-        }
+            <BrowserRouter>
+                <Routes>
+                    <Route path='/' element={<JoinForm/>} />
+                    <Route path='/chat/:userName' element={<Chat/>} />
+                </Routes>
+            </BrowserRouter>
         </div>
       );
 }

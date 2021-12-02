@@ -1,35 +1,60 @@
-const express = require('express');
-const app = express();
-const http = require('http');
-const cors = require('cors');
-const { Server } = require('socket.io');
+const WebSocket = require('ws');
 
-app.use(cors());
+const server = new WebSocket.Server({ port: 9999 });
 
-const server = http.createServer(app);
-const io = new Server(server, {
-    cors: {
-        origin: 'http://localhost:3000',
-        methods: ['GET', 'POST'],
+const users = new Set(); 
+
+const sendMessage = (message) => {
+    for (const user of users) {
+        user.socket.send(JSON.stringify(message));
     }
+};
+
+server.on('connection', socket => {
+    console.log(`You are inside`);
+
+    const userRef = {
+        socket: socket
+    };
+
+    if (users.size !== 2) {
+        users.add(userRef);
+        if (users.size === 2) {
+            console.log(`New user is connected`);
+        }
+    } else {
+        console.log('Access Denied');
+    }
+
+    socket.on('message', message => {
+        try {
+            const parsedMessage = JSON.parse(message);
+
+            if (
+                typeof parsedMessage.sender !== 'string' ||
+                typeof parsedMessage.body !== 'string'
+            ) {
+                console.error('Invalid message received', message);
+                return;
+            };
+
+            const verifiedMessage = {
+                sender: parsedMessage.sender,
+                body: parsedMessage.body,
+                sentAt: Date.now()
+            };
+
+            sendMessage(verifiedMessage);
+
+        } catch (error) {
+            console.log('Error parsing message!', error);
+        }
+
+    });
+
+    socket.on('close', (code, reason) => {
+        console.log(`User disconnected with code ${code} and reason ${reason}`);
+        users.delete(userRef);
+    });
 });
 
-io.on('connection', (socket) => {
-    console.log('User connected', socket.id); 
-    
-    socket.on('JOIN_ROOM', data => {
-        socket.join(data);
-        console.log(`User with ID: ${socket.id} joined room: ${data}`);
-    });
-    socket.on('SEND_MESSAGE', data => {
-        socket.to(data.roomId).emit('RECEIVE_MESSAGE' ,data);
-    });
-    socket.on('disconnect', () => {
-        console.log('User disconnected', socket.id);
-    });
-});
-
-
-server.listen(9999, () => {
-    console.log('SERVER RUNNING');
-});
