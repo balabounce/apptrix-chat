@@ -1,2 +1,2 @@
-yarn run server
+yarn run server \n
 yarn start
